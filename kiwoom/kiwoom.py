@@ -12,6 +12,7 @@ class Kiwoom(QAxWidget):
 
         self.event_slots()
         self.signal_login_commConnect()
+        self.get_account_info()
 
 
     def get_ocx_instance(self):
@@ -27,3 +28,9 @@ class Kiwoom(QAxWidget):
     def login_slot(self, err_code):
         print(errors(err_code)[1])
         self.login_event_loop.exit()
+
+    def get_account_info(self):
+        account_list = self.dynamicCall('GetLoginInfo(QString)', 'ACCNO')
+        account_num = account_list.split(',')[0]
+        self.account_num = account_num
+        print(f'계좌번호: {self.account_num}')
