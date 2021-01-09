@@ -17,6 +17,8 @@ class Kiwoom(QAxWidget):
         self.use_money = 0
         self.use_money_percent = 0.5
         self.output_deposit = 0
+        self.total_profit_loss_money = 0
+        self.total_profit_loss_rate = 0
 
         self.screen_my_info = "2000"
 
