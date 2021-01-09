@@ -1,6 +1,6 @@
 from PyQt5.QAxContainer import *
 
-class Kiwoom(QAWidget):
+class Kiwoom(QAxWidget):
     def __init__(self):
         super().__init__()
         print('Kiwoom start')
