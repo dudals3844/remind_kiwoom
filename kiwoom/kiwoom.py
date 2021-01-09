@@ -61,7 +61,7 @@ class Kiwoom(QAxWidget):
         self.dynamicCall("SetInputValue(QString, QString)","비밀번호", "0000")
         self.dynamicCall("SetInputValue(QString, QString)","비밀번호입력매체구분", "00")
         self.dynamicCall("SetInputValue(QString, QString)","조회구분", "1")
-        self.dynamicCall("CommRqData(QString, QString, int, QString)","예수금상세현황요청", "opw00001", sPreNext, self.screen_info)
+        self.dynamicCall("CommRqData(QString, QString, int, QString)","예수금상세현황요청", "opw00001", sPreNext, self.screen_my_info)
 
     def stop_screen_cancle(self, sScrNo = None):
         self.dynamicCall('DisconnectRealData(QString)', sScrNo)
