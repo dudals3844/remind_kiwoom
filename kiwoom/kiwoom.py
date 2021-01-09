@@ -22,7 +22,7 @@ class Kiwoom(QAxWidget):
         self.event_slots()
         self.signal_login_commConnect()
         self.get_account_info()
-
+        self.detail_account_info()
 
     def get_ocx_instance(self):
         self.setControl("KHOPENAPI.KHOpenAPICtrl.1")
@@ -40,9 +40,10 @@ class Kiwoom(QAxWidget):
 
     def get_account_info(self):
         account_list = self.dynamicCall('GetLoginInfo(QString)', 'ACCNO')
-        account_num = account_list.split(',')[0]
+        account_num = account_list.split(';')[0]
         self.account_num = account_num
         print(f'계좌번호: {self.account_num}')
+
     def detail_account_info(self, sPreNext = '0'):
         self.dynamicCall("SetInputValue(QString, QString)","계좌번호", self.account_num)
         self.dynamicCall("SetInputValue(QString, QString)","비밀번호", "0000")
