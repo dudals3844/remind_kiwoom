@@ -17,7 +17,7 @@ class Kiwoom(QAxWidget):
         self.use_money_percent = 0.5
         self.output_deposit = 0
 
-        self.screen_info = "2000"
+        self.screen_my_info = "2000"
 
         self.event_slots()
         self.signal_login_commConnect()
@@ -29,6 +29,7 @@ class Kiwoom(QAxWidget):
 
     def event_slots(self):
         self.OnEventConnect.connect(self.login_slot)
+        self.OnReceiveTrData.connect(self.trdata_slot)
 
     def signal_login_commConnect(self):
         self.dynamicCall('CommConnect')
@@ -37,6 +38,17 @@ class Kiwoom(QAxWidget):
     def login_slot(self, err_code):
         print(errors(err_code)[1])
         self.login_event_loop.exit()
+
+    def trdata_slot(self, sScrNo, sRQName, sTrCode, sRecordName, sPrevNext):
+        deposit = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, 0, '예수금')
+        self.deposit = int(deposit)
+
+        use_money = float(self.deposit) * self.use_money_percent
+        self.use_money = int(use_money) / 4
+        output_deposit = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, 0, '출금가능금액')
+        self.output_deposit = int(output_deposit)
+        print(f'예수금: {self.output_deposit}')
+        self.stop_screen_cancle(self.screen_my_info)
 
     def get_account_info(self):
         account_list = self.dynamicCall('GetLoginInfo(QString)', 'ACCNO')
@@ -50,3 +62,6 @@ class Kiwoom(QAxWidget):
         self.dynamicCall("SetInputValue(QString, QString)","비밀번호입력매체구분", "00")
         self.dynamicCall("SetInputValue(QString, QString)","조회구분", "1")
         self.dynamicCall("CommRqData(QString, QString, int, QString)","예수금상세현황요청", "opw00001", sPreNext, self.screen_info)
+
+    def stop_screen_cancle(self, sScrNo = None):
+        self.dynamicCall('DisconnectRealData(QString)', sScrNo)
