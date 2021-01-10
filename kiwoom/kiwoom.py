@@ -26,7 +26,7 @@ class Kiwoom(QAxWidget):
         self.signal_login_commConnect()
         self.get_account_info()
         self.detail_account_info()
-        self.detail_account_mystock()
+        # self.detail_account_mystock()
 
     def get_ocx_instance(self):
         self.setControl("KHOPENAPI.KHOpenAPICtrl.1")
@@ -44,7 +44,7 @@ class Kiwoom(QAxWidget):
         self.login_event_loop.exit()
 
     def trdata_slot(self, sScrNo, sRQName, sTrCode, sRecordName, sPrevNext):
-        if sRQName == '예수금상세현황요청:':
+        if sRQName == '예수금상세현황요청':
             deposit = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, 0, '예수금')
             self.deposit = int(deposit)
 
