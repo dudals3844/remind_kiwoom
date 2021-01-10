@@ -66,6 +66,8 @@ class Kiwoom(QAxWidget):
                                                       0, "총수익률(%)")
             self.total_profit_loss_rate = float(total_profit_loss_rate)
             print(f'계좌평가잔고내역요청: {self.total_buy_money}, {self.total_profit_loss_money}, {self.total_profit_loss_rate}')
+
+            self.stop_screen_cancle(self.screen_my_info)
             self.detail_account_info_event_loop.exit()
 
 
