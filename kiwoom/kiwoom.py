@@ -191,10 +191,9 @@ class Kiwoom(QAxWidget):
                                                  "현재가")  # 출력 : 000070
                 value = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i,
                                          "거래량")  # 출력 : 000070
-                trading_value = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i,
-                                                 "거래대금")  # 출력 : 000070
-                date = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i,
-                                        "일자")  # 출력 : 000070
+                time = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i,
+                                                 "체결시")  # 출력 : 000070
+
                 start_price = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i,
                                                "시가")  # 출력 : 000070
                 high_price = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i,
@@ -202,7 +201,7 @@ class Kiwoom(QAxWidget):
                 low_price = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i,
                                              "저가")  # 출력 : 000070
 
-                print(f'현재가: {current_price} - {value} - {trading_value} - 시간:{date} - {start_price} - {high_price} - {low_price}')
+                print(f'현재가: {current_price}  - {value} - 시간:{time} - {start_price} - {high_price} - {low_price}')
             if sPrevNext == "2":
                 self.minute_kiwoom_db(code=code, sPrevNext=sPrevNext)
             else:
