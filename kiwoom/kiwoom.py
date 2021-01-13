@@ -178,13 +178,37 @@ class Kiwoom(QAxWidget):
 
         elif sRQName == "주식봉차트조회":
             code = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, 0, "종목코드")
-            data = self.dynamicCall("GetCommDataEx(QString, QString)", sTrCode, sRQName)
+            # data = self.dynamicCall("GetCommDataEx(QString, QString)", sTrCode, sRQName)
             print(f'분봉차트: {code}')
 
+            cnt = self.dynamicCall("GetRepeatCnt(QString, QString)", sTrCode, sRQName)
+            print("남은 일자 수 %s" % cnt)
+
+            for i in range(cnt):
+                data = []
+
+                current_price = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i,
+                                                 "현재가")  # 출력 : 000070
+                value = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i,
+                                         "거래량")  # 출력 : 000070
+                trading_value = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i,
+                                                 "거래대금")  # 출력 : 000070
+                date = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i,
+                                        "일자")  # 출력 : 000070
+                start_price = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i,
+                                               "시가")  # 출력 : 000070
+                high_price = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i,
+                                              "고가")  # 출력 : 000070
+                low_price = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i,
+                                             "저가")  # 출력 : 000070
+
+                print(f'현재가: {current_price} - {value} - {trading_value} - 시간:{date} - {start_price} - {high_price} - {low_price}')
             if sPrevNext == "2":
                 self.minute_kiwoom_db(code=code, sPrevNext=sPrevNext)
             else:
                 self.calculator_event_loop.exit()
+
+
 
 
     def get_account_info(self):
