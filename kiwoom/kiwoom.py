@@ -9,9 +9,11 @@ class Kiwoom(QAxWidget):
         self.get_ocx_instance()
 
         self.login_event_loop = QEventLoop()
+        # 왜 Event loop를 안에다가 넣어야 될까
         self.detail_account_info_event_loop = QEventLoop()
 
         #### 계좌 관련 변수
+        self.account_stock_num = None
         self.account_num = None
         self.deposit = 0
         self.use_money = 0
@@ -54,7 +56,6 @@ class Kiwoom(QAxWidget):
             output_deposit = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, 0, '출금가능금액')
             self.output_deposit = int(output_deposit)
             print(f'예수금: {self.output_deposit}')
-            # self.stop_screen_cancle(self.screen_my_info)
 
         elif sRQName == '계좌평가잔고내역요청':
             total_buy_money = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, 0,
@@ -68,7 +69,55 @@ class Kiwoom(QAxWidget):
             self.total_profit_loss_rate = float(total_profit_loss_rate)
             print(f'계좌평가잔고내역요청: {self.total_buy_money}, {self.total_profit_loss_money}, {self.total_profit_loss_rate}')
 
-            self.detail_account_info_event_loop.exit()
+            rows = self.dynamicCall("GetRepeatCnt(QString, QString)",sTrCode, sRQName)
+            for i in range(rows):
+                code = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i, "종목번호")
+                code = code.strip()[1:]
+
+                code_nm = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i, "종목명")
+                stock_quantity = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i,
+                                                  "보유수량")
+                buy_price = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i, "매입가")
+                learn_rate = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i,
+                                              "수익률(%)")
+                current_price = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i,
+                                                 "현재가")
+                total_chegual_price = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName,
+                                                       i, "매입금액")
+                possible_quantity = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i,
+                                                     "매매가능수량")
+
+                print("종목번호: %s - 종목명: %s - 보유수량: %s - 매입가:%s - 수익률: %s - 현재가: %s" % (
+                code, code_nm, stock_quantity, buy_price, learn_rate, current_price))
+
+                if code in self.account_stock_dict:
+                    pass
+                else:
+                    self.account_stock_dict[code] = {}
+
+                code_nm = code_nm.strip()
+                stock_quantity = int(stock_quantity.strip())
+                buy_price = int(buy_price.strip())
+                learn_rate = float(learn_rate.strip())
+                current_price = int(current_price.strip())
+                total_chegual_price = int(total_chegual_price.strip())
+                possible_quantity = int(possible_quantity.strip())
+
+                self.account_stock_dict[code].update({"종목명": code_nm})
+                self.account_stock_dict[code].update({"보유수량": stock_quantity})
+                self.account_stock_dict[code].update({"매입가": buy_price})
+                self.account_stock_dict[code].update({"수익률(%)": learn_rate})
+                self.account_stock_dict[code].update({"현재가": current_price})
+                self.account_stock_dict[code].update({"매입금액": total_chegual_price})
+                self.account_stock_dict[code].update({"매매가능수량": possible_quantity})
+
+            print("sPreNext : %s" % sPrevNext)
+            print("계좌에 가지고 있는 종목은 %s " % rows)
+
+            if sPrevNext == "2":
+                self.detail_account_mystock(sPrevNext="2")
+            else:
+                self.detail_account_info_event_loop.exit()
 
 
     def get_account_info(self):
@@ -91,6 +140,7 @@ class Kiwoom(QAxWidget):
         self.dynamicCall("SetInputValue(QString, QString)", "조회구분", "1")
         self.dynamicCall("CommRqData(QString, QString, int, QString)", "계좌평가잔고내역요청", "opw00018", sPrevNext,
                          self.screen_my_info)
+        self.detail_account_info_event_loop.exec_()
 
     def stop_screen_cancle(self, sScrNo = None):
         self.dynamicCall('DisconnectRealData(QString)', sScrNo)
