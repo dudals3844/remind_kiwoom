@@ -13,6 +13,7 @@ class Kiwoom(QAxWidget):
         self.login_event_loop = QEventLoop()
         # 왜 Event loop를 안에다가 넣어야 될까
         self.detail_account_info_event_loop = QEventLoop()
+        self.calculator_event_loop = QEventLoop()
 
         #### 계좌 관련 변수
         self.account_stock_dict  = {}
