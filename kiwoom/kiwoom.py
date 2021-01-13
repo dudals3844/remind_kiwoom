@@ -215,6 +215,7 @@ class Kiwoom(QAxWidget):
                 data.append("")
 
                 self.calcul_data.append(data.copy())
+                print(self.calcul_data)
 
             if sPrevNext == "2":
                 self.day_kiwoom_db(code=code, sPrevNext=sPrevNext)
