@@ -13,7 +13,7 @@ class Kiwoom(QAxWidget):
         self.detail_account_info_event_loop = QEventLoop()
 
         #### 계좌 관련 변수
-        self.account_stock_num = None
+        self.account_stock_dict  = {}
         self.account_num = None
         self.deposit = 0
         self.use_money = 0
