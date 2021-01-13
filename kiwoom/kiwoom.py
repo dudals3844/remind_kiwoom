@@ -37,7 +37,7 @@ class Kiwoom(QAxWidget):
         self.get_account_info()
         self.detail_account_info()
         self.detail_account_mystock()
-        QTimer.singleShot(5000, self.not_concluded_account)
+        # QTimer.singleShot(5000, self.not_concluded_account)
         self.calculator_fnc()
 
     def get_ocx_instance(self):
