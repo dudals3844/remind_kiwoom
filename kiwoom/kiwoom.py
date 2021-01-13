@@ -1,5 +1,5 @@
 from PyQt5.QAxContainer import *
-from PyQt5.QtCore import QEventLoop
+from PyQt5.QtCore import QEventLoop, QTimer
 from config.errorCode import *
 
 class Kiwoom(QAxWidget):
@@ -30,7 +30,8 @@ class Kiwoom(QAxWidget):
         self.signal_login_commConnect()
         self.get_account_info()
         self.detail_account_info()
-        # self.detail_account_mystock()
+        self.detail_account_mystock()
+        QTimer.singleShot(5000, self.not_concluded_account)
 
     def get_ocx_instance(self):
         self.setControl("KHOPENAPI.KHOpenAPICtrl.1")
