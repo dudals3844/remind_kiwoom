@@ -219,6 +219,7 @@ class Kiwoom(QAxWidget):
             if sPrevNext == "2":
                 self.day_kiwoom_db(code=code, sPrevNext=sPrevNext)
             else:
+                print(self.calcul_data)
                 self.calculator_event_loop.exit()
 
 
