@@ -1,5 +1,7 @@
 from PyQt5.QAxContainer import *
 from PyQt5.QtCore import QEventLoop, QTimer
+from PyQt5.QtTest import QTest
+
 from config.errorCode import *
 
 class Kiwoom(QAxWidget):
@@ -24,6 +26,7 @@ class Kiwoom(QAxWidget):
         self.total_profit_loss_rate = 0
 
         self.screen_my_info = "2000"
+        self.screen_calculation_stock = '4000'
 
         self.event_slots()
 
@@ -32,6 +35,7 @@ class Kiwoom(QAxWidget):
         self.detail_account_info()
         self.detail_account_mystock()
         QTimer.singleShot(5000, self.not_concluded_account)
+        self.calculator_fnc()
 
     def get_ocx_instance(self):
         self.setControl("KHOPENAPI.KHOpenAPICtrl.1")
@@ -171,6 +175,15 @@ class Kiwoom(QAxWidget):
 
             self.detail_account_info_event_loop.exit()
 
+        elif sRQName == "주식봉차트조회":
+            code = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, 0, "종목코드")
+            data = self.dynamicCall("GetCommDataEx(QString, QString)", sTrCode, sRQName)
+
+            if sPrevNext == "2":
+                self.minute_kiwoom_db(code=code, sPrevNext=sPrevNext)
+            else:
+                self.calculator_event_loop.exit()
+
 
     def get_account_info(self):
         account_list = self.dynamicCall('GetLoginInfo(QString)', 'ACCNO')
@@ -204,6 +217,35 @@ class Kiwoom(QAxWidget):
 
         self.detail_account_info_event_loop.exec_()
 
+    def get_code_list_by_market(self, market_code):
+        code_list = self.dynamicCall("GetCodeListByMarket(QString)", market_code)
+        code_list = code_list.split(';')[:-1]
+        return code_list
+
+    def calculator_fnc(self):
+        code_list = self.get_code_list_by_market("10")
+        print("코스닥 갯수 %s " % len(code_list))
+
+        for idx, code in enumerate(code_list):
+            self.dynamicCall("DisconnectRealData(QString)", self.screen_calculation_stock)  # 스크린 연결 끊기
+
+            print("%s / %s : KOSDAQ Stock Code : %s is updating... " % (idx + 1, len(code_list), code))
+            self.minute_kiwoom_db(code=code)
+
+    def minute_kiwoom_db(self, code=None, date=None, sPrevNext="0"):
+        QTest.qWait(3600)  # 3.6초마다 딜레이를 준다.
+
+        self.dynamicCall("SetInputValue(QString, QString)", "종목코드", code)
+        self.dynamicCall("SetInputValue(QString, QString)", "틱범위", "1")
+        self.dynamicCall("SetInputValue(QString, QString)", "수정주가구분", "1")
+
+        if date != None:
+            self.dynamicCall("SetInputValue(QString, QString)", "기준일자", date)
+
+        self.dynamicCall("CommRqData(QString, QString, int, QString)", "주식봉차트조회", "opt10080", sPrevNext,
+                         self.screen_calculation_stock)
+
+        self.calculator_event_loop.exec_()
 
     def stop_screen_cancle(self, sScrNo = None):
         self.dynamicCall('DisconnectRealData(QString)', sScrNo)
