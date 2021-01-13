@@ -18,6 +18,8 @@ class Kiwoom(QAxWidget):
         #### 계좌 관련 변수
         self.account_stock_dict  = {}
         self.not_account_stock_dict = {}
+        self.calcul_data = []
+
         self.account_num = None
         self.deposit = 0
         self.use_money = 0
