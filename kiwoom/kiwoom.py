@@ -178,6 +178,7 @@ class Kiwoom(QAxWidget):
         elif sRQName == "주식봉차트조회":
             code = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, 0, "종목코드")
             data = self.dynamicCall("GetCommDataEx(QString, QString)", sTrCode, sRQName)
+            print(f'분봉차트: {code}')
 
             if sPrevNext == "2":
                 self.minute_kiwoom_db(code=code, sPrevNext=sPrevNext)
