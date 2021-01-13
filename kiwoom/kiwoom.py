@@ -23,6 +23,7 @@ class Kiwoom(QAxWidget):
         self.screen_my_info = "2000"
 
         self.event_slots()
+
         self.signal_login_commConnect()
         self.get_account_info()
         self.detail_account_info()
@@ -55,7 +56,7 @@ class Kiwoom(QAxWidget):
             print(f'예수금: {self.output_deposit}')
             self.stop_screen_cancle(self.screen_my_info)
 
-        elif sRQName == '계좌평가내역요청':
+        elif sRQName == '계좌평가잔고내역요청':
             total_buy_money = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, 0,
                                                "총매입금액")
             self.total_buy_money = int(total_buy_money)
@@ -91,7 +92,6 @@ class Kiwoom(QAxWidget):
         self.dynamicCall("SetInputValue(QString, QString)", "조회구분", "1")
         self.dynamicCall("CommRqData(QString, QString, int, QString)", "계좌평가잔고내역요청", "opw00018", sPrevNext,
                          self.screen_my_info)
-        self.detail_account_info_event_loop.exec_()
 
     def stop_screen_cancle(self, sScrNo = None):
         self.dynamicCall('DisconnectRealData(QString)', sScrNo)
