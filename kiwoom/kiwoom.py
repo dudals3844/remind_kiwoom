@@ -34,6 +34,7 @@ class Kiwoom(QAxWidget):
         self.screen_my_info = "2000"
         self.screen_calculation_stock = '4000'
         self.screen_start_stop_real = '1000'
+        self.screen_real_stock_data = '1500'
 
         self.event_slots()
         self.real_event_slot()
@@ -47,6 +48,9 @@ class Kiwoom(QAxWidget):
         # 실시간 장시간 등
         self.dynamicCall("SetRealReg록(QString, QString, QString, QString)", self.screen_start_stop_real, '',
                          self.realType.REALTYPE['장시작시간']['장운영구분'], "0")
+
+        fids = self.real_type.REALTYPE['주식체결']['체결시간']
+        self.dynanicCall("SetRealReg(QString, QString, QString, QString)", self.screen_real_stock_data, '005930', fids, "1")
 
     def get_ocx_instance(self):
         self.setControl("KHOPENAPI.KHOpenAPICtrl.1")
