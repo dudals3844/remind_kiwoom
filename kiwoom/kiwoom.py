@@ -215,7 +215,7 @@ class Kiwoom(QAxWidget):
                 data.append("")
 
                 self.calcul_data.append(data.copy())
-                print(self.calcul_data)
+                print(f'price: {current_price}, date: {date}, value: {value}')
 
             if sPrevNext == "2":
                 self.day_kiwoom_db(code=code, sPrevNext=sPrevNext)
