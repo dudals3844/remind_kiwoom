@@ -84,6 +84,49 @@ class Kiwoom(QAxWidget):
             elif value == '4':
                 print('3시 30분 장 종')
 
+        elif sRealType == "주식체결":
+            time = self.dynamicCall("GetCommRealData(QString, int)", sCode,
+                                 self.realType.REALTYPE[sRealType]['체결시간'])  # 출력 HHMMSS
+            now_price = self.dynamicCall("GetCommRealData(QString, int)", sCode,
+                                 self.realType.REALTYPE[sRealType]['현재가'])  # 출력 : +(-)2520
+            now_price = abs(int(b))
+
+            yesterday_diff = self.dynamicCall("GetCommRealData(QString, int)", sCode,
+                                 self.realType.REALTYPE[sRealType]['전일대비'])  # 출력 : +(-)2520
+            yesterday_diff = abs(int(yesterday_diff))
+
+            yesterday_diff_percent = self.dynamicCall("GetCommRealData(QString, int)", sCode,
+                                                      self.realType.REALTYPE[sRealType]['등락율'])  # 출력 : +(-)12.98
+            yesterday_diff_percent = float(yesterday_diff_percent)
+
+            medo_1_hoga = self.dynamicCall("GetCommRealData(QString, int)", sCode,
+                                           self.realType.REALTYPE[sRealType]['(최우선)매도호가'])  # 출력 : +(-)2520
+            medo_1_hoga = abs(int(medo_1_hoga))
+
+            mesu_1_hoga = self.dynamicCall("GetCommRealData(QString, int)", sCode,
+                                           self.realType.REALTYPE[sRealType]['(최우선)매수호가'])  # 출력 : +(-)2515
+            mesu_1_hoga = abs(int(mesu_1_hoga))
+
+            volume = self.dynamicCall("GetCommRealData(QString, int)", sCode,
+                                      self.realType.REALTYPE[sRealType]['거래량'])  # 출력 : +240124 매수일때, -2034 매도일 때
+            volume = abs(int(volume))
+
+            volume_sum = self.dynamicCall("GetCommRealData(QString, int)", sCode,
+                                          self.realType.REALTYPE[sRealType]['누적거래량'])  # 출력 : 240124
+            volume_sum = abs(int(volume_sum))
+
+            high_price = self.dynamicCall("GetCommRealData(QString, int)", sCode,
+                                          self.realType.REALTYPE[sRealType]['고가'])  # 출력 : +(-)2530
+            high_price = abs(int(high_price))
+
+            start_price = self.dynamicCall("GetCommRealData(QString, int)", sCode,
+                                           self.realType.REALTYPE[sRealType]['시가'])  # 출력 : +(-)2530
+            start_price = abs(int(start_price))
+
+            low_price = self.dynamicCall("GetCommRealData(QString, int)", sCode,
+                                         self.realType.REALTYPE[sRealType]['저가'])  # 출력 : +(-)2530
+            low_price = abs(int(low_price))
+
 
 
     def trdata_slot(self, sScrNo, sRQName, sTrCode, sRecordName, sPrevNext):
