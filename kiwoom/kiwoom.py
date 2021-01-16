@@ -3,12 +3,15 @@ from PyQt5.QtCore import QEventLoop, QTimer
 from PyQt5.QtTest import QTest
 
 from config.errorCode import *
+from config.kiwoomType import RealType
+
 
 class Kiwoom(QAxWidget):
     def __init__(self):
         super().__init__()
         print('Kiwoom start')
         self.get_ocx_instance()
+        self.real_type = RealType()
 
         self.login_event_loop = QEventLoop()
         # 왜 Event loop를 안에다가 넣어야 될까
@@ -30,8 +33,10 @@ class Kiwoom(QAxWidget):
 
         self.screen_my_info = "2000"
         self.screen_calculation_stock = '4000'
+        self.screen_start_stop_real = '1000'
 
         self.event_slots()
+        self.real_event_slot()
 
         self.signal_login_commConnect()
         self.get_account_info()
@@ -39,6 +44,9 @@ class Kiwoom(QAxWidget):
         self.detail_account_mystock()
         # QTimer.singleShot(5000, self.not_concluded_account)
         self.calculator_fnc()
+        # 실시간 장시간 등
+        self.dynamicCall("SetRealReg록(QString, QString, QString, QString)", self.screen_start_stop_real, '',
+                         self.realType.REALTYPE['장시작시간']['장운영구분'], "0")
 
     def get_ocx_instance(self):
         self.setControl("KHOPENAPI.KHOpenAPICtrl.1")
@@ -47,6 +55,9 @@ class Kiwoom(QAxWidget):
         self.OnEventConnect.connect(self.login_slot)
         self.OnReceiveTrData.connect(self.trdata_slot)
 
+    def real_event_slot(self):
+        self.OnReceiveRealData.connect(self.realdata_slot)
+
     def signal_login_commConnect(self):
         self.dynamicCall('CommConnect')
         self.login_event_loop.exec_()
@@ -54,6 +65,22 @@ class Kiwoom(QAxWidget):
     def login_slot(self, err_code):
         print(errors(err_code)[1])
         self.login_event_loop.exit()
+
+
+    def realdata_slot(self, sCode, sRealType, sRealData):
+        if sRealType == '장시작시간':
+            fid = self.real_type.REALTYPE[sRealType]['장운영구분']
+            value = self.dynamicCall("GetCommRealData(QString, int)", sCode, fid)
+            if value == '0':
+                print('장 시작전')
+            elif value == '3':
+                print('장 시작')
+            elif value == '2':
+                print('장 종료: 동시호가로 넘어감')
+            elif value == '4':
+                print('3시 30분 장 종')
+
+
 
     def trdata_slot(self, sScrNo, sRQName, sTrCode, sRecordName, sPrevNext):
         if sRQName == '예수금상세현황요청':
