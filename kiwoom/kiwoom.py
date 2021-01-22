@@ -137,6 +137,13 @@ class Kiwoom(QAxWidget):
             else:
                 print('order fail')
 
+            ## 주문가능 수량은 실시간으로 확인
+            sell_quan = 1
+            order_success = self.dynamicCall(
+                "SendOrder(QString, QString, QString, int, QString, int, int, QString, QString,)",
+            ["신규매도", self.screen_order, self.account_num, 2, sCode, sell_quan, 0, self.real_type.REALTYPE['거래구분']['시장가'], ""])
+
+
 
 
     def trdata_slot(self, sScrNo, sRQName, sTrCode, sRecordName, sPrevNext):
