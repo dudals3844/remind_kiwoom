@@ -35,6 +35,7 @@ class Kiwoom(QAxWidget):
         self.screen_calculation_stock = '4000'
         self.screen_start_stop_real = '1000'
         self.screen_real_stock_data = '1500'
+        self.screen_order = '3000'
 
         self.event_slots()
         self.real_event_slot()
@@ -126,6 +127,15 @@ class Kiwoom(QAxWidget):
             low_price = self.dynamicCall("GetCommRealData(QString, int)", sCode,
                                          self.realType.REALTYPE[sRealType]['저가'])  # 출력 : +(-)2530
             low_price = abs(int(low_price))
+
+            # 조건을 충족하면 주문
+            quantity = 1
+            order_success = self.dynamicCall("SendOrder(QString, QString, QString, int, QString, int, int, QString, QString,)",
+                                             ['신규매수', self.screen_order, self.account_num, 1, sCode, quantity, medo_1_hoga, self.real_type.SENDTYPE['거래구분']['지정가'],""])
+            if order_success == 0:
+                print('order success')
+            else:
+                print('order fail')
 
 
 
