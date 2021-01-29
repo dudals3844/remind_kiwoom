@@ -59,6 +59,7 @@ class Kiwoom(QAxWidget):
     def event_slots(self):
         self.OnEventConnect.connect(self.login_slot)
         self.OnReceiveTrData.connect(self.trdata_slot)
+        self.OnReceiveMsg.connect(self.msg_slot)
 
     def real_event_slot(self):
         self.OnReceiveRealData.connect(self.realdata_slot)
@@ -235,7 +236,8 @@ class Kiwoom(QAxWidget):
             first_buy_price = self.dynamicCall("GetChejanData(int)", self.realType.REALTYPE['잔고']['(최우선)매수호가'])
             first_buy_price = abs(int(first_buy_price))
 
-
+    def msg_slot(self, sScrNo, sRQName, sTrCode, msg):
+        print(f"스크린: {sScrNo} 요청이름: {sRQName} tr코드: {sTrCode} ---- {msg}")
 
     def trdata_slot(self, sScrNo, sRQName, sTrCode, sRecordName, sPrevNext):
         if sRQName == '예수금상세현황요청':
