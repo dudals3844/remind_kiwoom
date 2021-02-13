@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class StockOpenOrder:
+class StockOpenOrderData:
     name: str = None
     code: str = None
     status: str = None

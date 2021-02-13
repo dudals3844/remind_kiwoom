@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class Account:
+class AccountData:
     number: str = None
     deposit: float = None
     total_buy_money: float = None

@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class Stock:
+class StockData:
     name: str = None
     code: str = None
     hold_number: int = None
