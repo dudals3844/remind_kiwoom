@@ -4,7 +4,7 @@ from PyQt5.QtTest import QTest
 from config.errorCode import *
 from config.kiwoomType import RealType
 from kiwoom.tr.account import Account
-from property.constants import TR_EVENTLOOP
+from property.global_variable import TR_EVENTLOOP, ACCOUNT_DATA
 from kiwoom.tr.login import Login
 from kiwoom.slot.login_slot import LoginSlot
 
@@ -18,6 +18,7 @@ class Trading(QAxWidget):
 
         Login.request(self)
         Account.get_info(self)
+        print(ACCOUNT_DATA.number)
 
     def get_ocx_instance(self):
         self.setControl("KHOPENAPI.KHOpenAPICtrl.1")
