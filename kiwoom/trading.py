@@ -17,7 +17,7 @@ class Trading(QAxWidget):
         LoginSlot.connect(self, self.login_slot)
 
         Login.request(self)
-        Account.get_info()
+        Account.get_info(self)
 
     def get_ocx_instance(self):
         self.setControl("KHOPENAPI.KHOpenAPICtrl.1")
