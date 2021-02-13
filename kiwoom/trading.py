@@ -12,7 +12,7 @@ class Trading(QAxWidget):
         super().__init__()
         print("Kiwoom start")
         self.get_ocx_instance()
-        LoginSlot.connect(self.login_slot)
+        LoginSlot.connect(self, self.login_slot)
 
         Login.request(self)
 
