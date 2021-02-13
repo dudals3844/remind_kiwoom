@@ -3,9 +3,11 @@ from PyQt5.QtCore import QEventLoop, QTimer
 from PyQt5.QtTest import QTest
 from config.errorCode import *
 from config.kiwoomType import RealType
+from kiwoom.tr.account import Account
 from property.constants import TR_EVENTLOOP
 from kiwoom.tr.login import Login
 from kiwoom.slot.login_slot import LoginSlot
+
 
 class Trading(QAxWidget):
     def __init__(self):
@@ -15,6 +17,7 @@ class Trading(QAxWidget):
         LoginSlot.connect(self, self.login_slot)
 
         Login.request(self)
+        Account.get_info()
 
     def get_ocx_instance(self):
         self.setControl("KHOPENAPI.KHOpenAPICtrl.1")
