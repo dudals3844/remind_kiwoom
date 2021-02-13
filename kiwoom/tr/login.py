@@ -1,4 +1,4 @@
-from property.constants import TR_EVENTLOOP
+from property.global_variable import TR_EVENTLOOP
 
 class Login:
     def request(self):
