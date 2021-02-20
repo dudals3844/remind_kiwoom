@@ -19,8 +19,9 @@ class Trading(QAxWidget):
         TrSlot.connect(self, self.trdata_slot)
 
         Login.request(self)
-        Account.receive_info(self)
+        Account.receive_number(self)
         Account.Deposit.request(self)
+        Account.HoldStock.request(self)
 
 
     def get_ocx_instance(self):
@@ -33,3 +34,5 @@ class Trading(QAxWidget):
     def trdata_slot(self, sScrNo, sRQName, sTrCode, sRecordName, sPrevNext):
         if sRQName == '예수금상세현황요청':
             Account.Deposit.receive(self, sTrCode, sRQName)
+        elif sRQName == '계좌평가잔고내역요청':
+            Account.HoldStock.receive(self, sRQName, sTrCode, sPrevNext)
