@@ -35,7 +35,7 @@ class Account:
                              ScreenNumber.MY_INFO.value)
             TR_EVENTLOOP.exec_()
 
-        def _get(self, rows, sRQName, sTrCode):
+        def get(self, rows, sRQName, sTrCode):
             for i in range(rows):
                 code = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i, "종목번호")
                 code = code.strip()[1:]
@@ -74,7 +74,7 @@ class Account:
                                                                    0, "총수익률(%)")
             rows = self.dynamicCall("GetRepeatCnt(QString, QString)", sTrCode, sRQName)
 
-            self._get(rows, sRQName, sTrCode)
+            self.get(rows, sRQName, sTrCode)
 
             if sPrevNext == "2":
                 Account.HoldStock.request(self, sPrevNext='2')
