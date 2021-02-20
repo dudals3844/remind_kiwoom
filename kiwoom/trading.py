@@ -8,6 +8,7 @@ from property.global_variable import TR_EVENTLOOP, ACCOUNT_DATA
 from kiwoom.tr.login import Login
 from kiwoom.slot.login_slot import LoginSlot
 from kiwoom.slot.tr_slot import TrSlot
+from kiwoom.slot.real_slot import RealSlot
 
 
 class Trading(QAxWidget):
@@ -17,12 +18,13 @@ class Trading(QAxWidget):
         self.get_ocx_instance()
         LoginSlot.connect(self, self.login_slot)
         TrSlot.connect(self, self.trdata_slot)
+        RealSlot.connect(self, self.realdata_slot)
 
         Login.request(self)
         Account.receive_number(self)
         Account.Deposit.request(self)
         Account.HoldStock.request(self)
-
+        Account.OpenPositionStock.request(self)
 
     def get_ocx_instance(self):
         self.setControl("KHOPENAPI.KHOpenAPICtrl.1")
@@ -36,3 +38,11 @@ class Trading(QAxWidget):
             Account.Deposit.receive(self, sTrCode, sRQName)
         elif sRQName == '계좌평가잔고내역요청':
             Account.HoldStock.receive(self, sRQName, sTrCode, sPrevNext)
+        elif sRQName == '실시간미체결요청':
+            Account.OpenPositionStock.receive(self, sTrCode, sRQName)
+
+    def realdata_slot(self, sCode, sRealType, sRealData):
+        if sRealType == '장시작시간':
+            pass
+        elif sRealType == "주식체결":
+            pass
