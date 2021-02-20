@@ -46,7 +46,6 @@ class Account:
                                                                    sTrCode, sRQName,
                                                                    0, "총수익률(%)")
             rows = self.dynamicCall("GetRepeatCnt(QString, QString)", sTrCode, sRQName)
-
             for i in range(rows):
                 code = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i, "종목번호")
                 code = code.strip()[1:]
