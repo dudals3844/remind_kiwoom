@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from property.global_variable import HOLD_STOCK_LIST
 
 
 
