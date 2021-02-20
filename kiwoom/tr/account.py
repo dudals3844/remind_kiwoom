@@ -1,4 +1,5 @@
-from property.global_variable import ACCOUNT_DATA, TR_EVENTLOOP, HOLD_STOCK_LIST
+from property.global_variable import ACCOUNT_DATA, TR_EVENTLOOP, HOLD_STOCK_LIST, OPEN_ORDER_STOCK_LIST
+from property.open_order_stock_dataclass import StockOpenOrderData
 from property.screen_number import ScreenNumber
 from property.stock_dataclass import StockData
 
@@ -45,6 +46,14 @@ class Account:
                                                                    0, "총수익률(%)")
             rows = self.dynamicCall("GetRepeatCnt(QString, QString)", sTrCode, sRQName)
 
+            self.__get(rows, sRQName, sTrCode)
+
+            if sPrevNext == "2":
+                Account.HoldStock.request(self, sPrevNext='2')
+            else:
+                TR_EVENTLOOP.exit()
+
+        def __get(self, rows, sRQName, sTrCode):
             for i in range(rows):
                 code = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i, "종목번호")
                 code = code.strip()[1:]
@@ -71,8 +80,55 @@ class Account:
                                                  buy_price=buy_price,
                                                  total_hold_price=total_hold_price,
                                                  profit=profit))
-            if sPrevNext == "2":
-                Account.HoldStock.request(self, sPrevNext='2')
-            else:
-                TR_EVENTLOOP.exit()
 
+    class OpenPositionStock:
+        def request(self, sPrevNext="0"):
+            self.dynamicCall("SetInputValue(QString, QString)", "계좌번호", ACCOUNT_DATA.number)
+            self.dynamicCall("SetInputValue(QString, QString)", "체결구분", "1")
+            self.dynamicCall("SetInputValue(QString, QString)", "매매구분", "0")
+            self.dynamicCall("CommRqData(QString, QString, int, QString)", "실시간미체결요청", "opt10075", sPrevNext,
+                             ScreenNumber.MY_INFO.value)
+            TR_EVENTLOOP.exec_()
+
+        def receive(self, sTrCode, sRQName):
+            rows = self.dynamicCall("GetRepeatCnt(QString, QString)", sTrCode, sRQName)
+            self.__get(rows, sTrCode, sRQName)
+            TR_EVENTLOOP.exit()
+
+        def __get(self, rows, sTrCode, sRQName):
+            for i in range(rows):
+                code = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i, "종목코드")
+
+                name = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i, "종목명")
+                order_number = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i,
+                                                "주문번호")
+                order_status = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i,
+                                                "주문상태")  # 접수,확인,체결
+                order_quantity = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i,
+                                                  "주문수량")
+                order_price = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i,
+                                               "주문가격")
+                order_gubun = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i,
+                                               "주문구분")  # -매도, +매수, -매도정정, +매수정정
+                unfill_quantity = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i,
+                                                   "미체결수량")
+
+                code = code.strip()
+                name = name.strip()
+                order_number = int(order_number.strip())
+                order_status = order_status.strip()
+                order_quantity = int(order_quantity.strip())
+                order_price = int(order_price.strip())
+                order_gubun = order_gubun.strip().lstrip('+').lstrip('-')
+                unfill_quantity = int(unfill_quantity.strip())
+
+                OPEN_ORDER_STOCK_LIST.append(StockOpenOrderData(
+                    name=name,
+                    code=code,
+                    number=order_number,
+                    status=order_status,
+                    order_quantity=order_quantity,
+                    price=order_price,
+                    gubun=order_gubun,
+                    unfill_quantity=unfill_quantity
+                ))
