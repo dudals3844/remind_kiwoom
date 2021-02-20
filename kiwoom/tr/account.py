@@ -35,24 +35,6 @@ class Account:
                              ScreenNumber.MY_INFO.value)
             TR_EVENTLOOP.exec_()
 
-        def receive(self, sRQName, sTrCode, sPrevNext) -> list:
-            ACCOUNT_DATA.total_buy_money = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode,
-                                                            sRQName, 0, "총매입금액")
-            ACCOUNT_DATA.total_profit_loss_money = self.dynamicCall("GetCommData(QString, QString, int, QString)",
-                                                                    sTrCode, sRQName,
-                                                                    0, "총평가손익금액")
-            ACCOUNT_DATA.total_profit_loss_rate = self.dynamicCall("GetCommData(QString, QString, int, QString)",
-                                                                   sTrCode, sRQName,
-                                                                   0, "총수익률(%)")
-            rows = self.dynamicCall("GetRepeatCnt(QString, QString)", sTrCode, sRQName)
-
-            self.__get(rows, sRQName, sTrCode)
-
-            if sPrevNext == "2":
-                Account.HoldStock.request(self, sPrevNext='2')
-            else:
-                TR_EVENTLOOP.exit()
-
         def __get(self, rows, sRQName, sTrCode):
             for i in range(rows):
                 code = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i, "종목번호")
@@ -80,6 +62,24 @@ class Account:
                                                  buy_price=buy_price,
                                                  total_hold_price=total_hold_price,
                                                  profit=profit))
+
+        def receive(self, sRQName, sTrCode, sPrevNext) -> list:
+            ACCOUNT_DATA.total_buy_money = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode,
+                                                            sRQName, 0, "총매입금액")
+            ACCOUNT_DATA.total_profit_loss_money = self.dynamicCall("GetCommData(QString, QString, int, QString)",
+                                                                    sTrCode, sRQName,
+                                                                    0, "총평가손익금액")
+            ACCOUNT_DATA.total_profit_loss_rate = self.dynamicCall("GetCommData(QString, QString, int, QString)",
+                                                                   sTrCode, sRQName,
+                                                                   0, "총수익률(%)")
+            rows = self.dynamicCall("GetRepeatCnt(QString, QString)", sTrCode, sRQName)
+
+            self.__get(rows, sRQName, sTrCode)
+
+            if sPrevNext == "2":
+                Account.HoldStock.request(self, sPrevNext='2')
+            else:
+                TR_EVENTLOOP.exit()
 
     class OpenPositionStock:
         def request(self, sPrevNext="0"):
