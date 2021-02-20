@@ -9,8 +9,9 @@ from kiwoom.tr.login import Login
 from kiwoom.slot.login_slot import LoginSlot
 from kiwoom.slot.tr_slot import TrSlot
 from kiwoom.slot.real_slot import RealSlot
+from kiwoom.slot.balance_open_order_slot import BalanceOpenOrderSlot
 
-
+s
 class Trading(QAxWidget):
     def __init__(self):
         super().__init__()
@@ -19,6 +20,7 @@ class Trading(QAxWidget):
         LoginSlot.connect(self, self.login_slot)
         TrSlot.connect(self, self.trdata_slot)
         RealSlot.connect(self, self.realdata_slot)
+        BalanceOpenOrderSlot.connect(self, )
 
         Login.request(self)
         Account.receive_number(self)
@@ -45,4 +47,12 @@ class Trading(QAxWidget):
         if sRealType == '장시작시간':
             pass
         elif sRealType == "주식체결":
+            pass
+
+    def balance_openorder_slot(self, sGubun, nItemCnt, sFidList):
+        # 주문체결
+        if int(sGubun) == 0:
+            pass
+        # 잔고
+        elif int(sGubun) == 1:
             pass
