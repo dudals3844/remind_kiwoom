@@ -6,7 +6,7 @@ from dataclasses import dataclass
 class StockData:
     name: str = None
     code: str = None
-    hold_number: int = None
+    hold_quantity: int = None
     buy_price: float = None
     total_hold_price: float = None
     profit: float = None
