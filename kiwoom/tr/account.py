@@ -90,10 +90,6 @@ class Account:
 
         def receive(self, sTrCode, sRQName):
             rows = self.dynamicCall("GetRepeatCnt(QString, QString)", sTrCode, sRQName)
-            self.__get(rows, sTrCode, sRQName)
-            TR_EVENTLOOP.exit()
-
-        def __get(self, rows, sTrCode, sRQName):
             for i in range(rows):
                 code = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, i, "종목코드")
 
@@ -130,3 +126,6 @@ class Account:
                     gubun=order_gubun,
                     unfill_quantity=unfill_quantity
                 ))
+
+            TR_EVENTLOOP.exit()
+
