@@ -3,3 +3,4 @@ from property.account_dataclass import AccountData
 
 TR_EVENTLOOP = QEventLoop()
 ACCOUNT_DATA = AccountData()
+HOLD_STOCK_LIST = []
