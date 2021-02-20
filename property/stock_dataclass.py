@@ -12,3 +12,12 @@ class StockData:
     profit: float = None
 
 
+    @staticmethod
+    def is_in_list(code):
+        is_in_list = list(filter(lambda x: x.code == code, HOLD_STOCK_LIST))
+        if len(is_in_list) == 0:
+            return False
+        else:
+            return True
+
+
