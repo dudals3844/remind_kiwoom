@@ -20,7 +20,7 @@ class Trading(QAxWidget):
         LoginSlot.connect(self, self.login_slot)
         TrSlot.connect(self, self.trdata_slot)
         RealSlot.connect(self, self.realdata_slot)
-        BalanceOpenOrderSlot.connect(self, )
+        BalanceOpenOrderSlot.connect(self, self.balance_openorder_slot)
 
         Login.request(self)
         Account.receive_number(self)
