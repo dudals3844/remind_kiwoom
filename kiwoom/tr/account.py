@@ -1,6 +1,6 @@
 from property.global_variable import ACCOUNT_DATA, TR_EVENTLOOP, HOLD_STOCK_LIST, OPEN_ORDER_STOCK_LIST
 from property.dataclass.open_order_stock_dataclass import StockOpenOrderData
-from property.screen_number_enum import ScreenNumberEnum
+from property.enum.screen_number_enum import ScreenNumberEnum
 from property.dataclass.stock_dataclass import StockData
 
 
