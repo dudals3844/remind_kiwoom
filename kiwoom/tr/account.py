@@ -1,7 +1,7 @@
 from property.global_variable import ACCOUNT_DATA, TR_EVENTLOOP, HOLD_STOCK_LIST, OPEN_ORDER_STOCK_LIST
-from property.open_order_stock_dataclass import StockOpenOrderData
-from property.screen_number import ScreenNumber
-from property.stock_dataclass import StockData
+from property.dataclass.open_order_stock_dataclass import StockOpenOrderData
+from property.screen_number_enum import ScreenNumberEnum
+from property.dataclass.stock_dataclass import StockData
 
 
 class Account:
@@ -18,7 +18,7 @@ class Account:
             self.dynamicCall("SetInputValue(QString, QString)", "비밀번호입력매체구분", "00")
             self.dynamicCall("SetInputValue(QString, QString)", "조회구분", "1")
             self.dynamicCall("CommRqData(QString, QString, int, QString)", "예수금상세현황요청", "opw00001", sPrevNext,
-                             ScreenNumber.MY_INFO.value)
+                             ScreenNumberEnum.MY_INFO.value)
 
         def receive(self, sTrCode, sRQName):
             deposit = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode, sRQName, 0, '예수금')
@@ -32,7 +32,7 @@ class Account:
             self.dynamicCall("SetInputValue(QString, QString)", "비밀번호입력매체구분", "00")
             self.dynamicCall("SetInputValue(QString, QString)", "조회구분", "1")
             self.dynamicCall("CommRqData(QString, QString, int, QString)", "계좌평가잔고내역요청", "opw00018", sPrevNext,
-                             ScreenNumber.MY_INFO.value)
+                             ScreenNumberEnum.MY_INFO.value)
             TR_EVENTLOOP.exec_()
 
 
@@ -85,7 +85,7 @@ class Account:
             self.dynamicCall("SetInputValue(QString, QString)", "체결구분", "1")
             self.dynamicCall("SetInputValue(QString, QString)", "매매구분", "0")
             self.dynamicCall("CommRqData(QString, QString, int, QString)", "실시간미체결요청", "opt10075", sPrevNext,
-                             ScreenNumber.MY_INFO.value)
+                             ScreenNumberEnum.MY_INFO.value)
             TR_EVENTLOOP.exec_()
 
         def receive(self, sTrCode, sRQName):
