@@ -1,5 +1,5 @@
 from property.global_variable import REAL_TYPE
-from property.screen_number_enum import ScreenNumberEnum
+from property.enum.screen_number_enum import ScreenNumberEnum
 from property.dataclass.real_stock_price_dataclass import RealStockPriceDataclass
 
 

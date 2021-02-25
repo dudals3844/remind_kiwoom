@@ -1,5 +1,5 @@
-from property.screen_number_enum import ScreenNumberEnum
-from property.stock_market_check_enum import StockMarketEnum
+from property.enum.screen_number_enum import ScreenNumberEnum
+from property.enum.stock_market_check_enum import StockMarketEnum
 from property.global_variable import REAL_TYPE
 
 class StockMarketCheck:
