@@ -1,8 +1,9 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import List
 
 
 @dataclass
-class StockOpenOrderData:
+class StockOpenOrderBase:
     # 기업명
     name: str = None
     # 종목코드
@@ -21,3 +22,7 @@ class StockOpenOrderData:
     number: int = None
     # 원주문번호
     origin_number: str = None
+
+@dataclass
+class StockOpenOrderData:
+    stock_open_order_list: List[StockOpenOrderBase] = field(default_factory=list)

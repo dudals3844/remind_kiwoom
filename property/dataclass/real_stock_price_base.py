@@ -1,9 +1,9 @@
 from dataclasses import dataclass
-
+from dataclasses import is_dataclass
 
 
 @dataclass
-class RealStockPriceDataclass:
+class RealStockPriceBase:
     code: str = None
     time: str = None
     now_price: int = None
@@ -15,3 +15,8 @@ class RealStockPriceDataclass:
     volume_sum: int = None
     high_price: int = None
     low_price: int = None
+
+
+
+
+
