@@ -1,9 +1,15 @@
 from PyQt5.QtCore import QEventLoop
 from config.kiwoomType import RealType
-from property.dataclass.account_dataclass import AccountData
+from property.dataclass.account_base import AccountBase
+from property.dataclass.hold_stock_base import HoldStockData
+from property.dataclass.open_order_stock_base import StockOpenOrderData
 
 TR_EVENTLOOP = QEventLoop()
-ACCOUNT_DATA = AccountData()
-HOLD_STOCK_LIST = []
-OPEN_ORDER_STOCK_LIST = []
+ACCOUNT_DATA = AccountBase()
+HOLD_STOCK = HoldStockData()
+OPEN_ORDER_STOCK = StockOpenOrderData()
 REAL_TYPE = RealType()
+
+
+if __name__ == "__main__":
+    pass

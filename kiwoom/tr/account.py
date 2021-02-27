@@ -1,7 +1,7 @@
-from property.global_variable import ACCOUNT_DATA, TR_EVENTLOOP, HOLD_STOCK_LIST, OPEN_ORDER_STOCK_LIST
-from property.dataclass.open_order_stock_dataclass import StockOpenOrderData
+from property.global_variable import ACCOUNT_DATA, TR_EVENTLOOP, HOLD_STOCK, OPEN_ORDER_STOCK
+from property.dataclass.open_order_stock_base import StockOpenOrderBase
 from property.enum.screen_number_enum import ScreenNumberEnum
-from property.dataclass.stock_dataclass import StockData
+from property.dataclass.hold_stock_base import HoldStockBase
 
 
 class Account:
@@ -35,7 +35,6 @@ class Account:
                              ScreenNumberEnum.MY_INFO.value)
             TR_EVENTLOOP.exec_()
 
-
         def receive(self, sRQName, sTrCode, sPrevNext) -> list:
             ACCOUNT_DATA.total_buy_money = self.dynamicCall("GetCommData(QString, QString, int, QString)", sTrCode,
                                                             sRQName, 0, "총매입금액")
@@ -66,13 +65,12 @@ class Account:
                 profit = float(profit.strip())
                 total_hold_price = int(total_hold_price.strip())
 
-                HOLD_STOCK_LIST.append(StockData(code=code,
-                                                 name=name,
-                                                 hold_quantity=hold_quantity,
-                                                 buy_price=buy_price,
-                                                 total_hold_price=total_hold_price,
-                                                 profit=profit))
-
+                HOLD_STOCK.hold_stock_list.append(HoldStockBase(code=code,
+                                                                name=name,
+                                                                hold_quantity=hold_quantity,
+                                                                buy_price=buy_price,
+                                                                total_hold_price=total_hold_price,
+                                                                ))
 
             if sPrevNext == "2":
                 Account.HoldStock.request(self, sPrevNext='2')
@@ -116,7 +114,7 @@ class Account:
                 order_gubun = order_gubun.strip().lstrip('+').lstrip('-')
                 unfill_quantity = int(unfill_quantity.strip())
 
-                OPEN_ORDER_STOCK_LIST.append(StockOpenOrderData(
+                OPEN_ORDER_STOCK.stock_open_order_list.append(StockOpenOrderBase(
                     name=name,
                     code=code,
                     number=order_number,
@@ -128,4 +126,3 @@ class Account:
                 ))
 
             TR_EVENTLOOP.exit()
-
