@@ -1,6 +1,6 @@
 from property.global_variable import REAL_TYPE
 from property.enum.screen_number_enum import ScreenNumberEnum
-from property.dataclass.real_stock_price_dataclass import RealStockPriceDataclass
+from property.dataclass.real_stock_price_base import RealStockPriceBase
 
 
 
@@ -11,7 +11,7 @@ class StockPrice:
                          fids,
                          "1")
 
-    def receive(self, sCode, sRealType) -> RealStockPriceDataclass:
+    def receive(self, sCode, sRealType) -> RealStockPriceBase:
         time = self.dynamicCall("GetCommRealData(QString, int)", sCode,
                                 REAL_TYPE.REALTYPE[sRealType]['체결시간'])  # 출력 HHMMSS
         now_price = self.dynamicCall("GetCommRealData(QString, int)", sCode,
@@ -54,7 +54,7 @@ class StockPrice:
                                      REAL_TYPE.REALTYPE[sRealType]['저가'])  # 출력 : +(-)2530
         low_price = abs(int(low_price))
 
-        return RealStockPriceDataclass(
+        return RealStockPriceBase(
             code=sCode,
             time=time,
             now_price=now_price,
